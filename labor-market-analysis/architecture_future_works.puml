@@ -1,0 +1,39 @@
+@startuml
+
+interface HTTP as http
+
+package ETL {
+[requests]
+[beautiful-soup]
+[pymongo_etl]
+
+[requests] --> [beautiful-soup]
+[beautiful-soup] --> [pymongo_etl]
+
+[extract_detailed_description] --> [pymongo_etl] : update
+}
+
+package BI {
+[pymongo_bi]
+[pandas]
+[seaborn]
+
+[pymongo_bi] --> [pandas]
+[pandas] --> [seaborn]
+}
+
+database "Data Lake" {
+[MongoDB]
+}
+
+node Queue {
+    [task_queue]
+}
+
+[requests] <-up-> http
+[pymongo_etl] --> [MongoDB]
+[pymongo_bi] <-- [MongoDB]
+[beautiful-soup] --> [task_queue] : put
+[extract_detailed_description] --> [task_queue]: read
+
+@enduml

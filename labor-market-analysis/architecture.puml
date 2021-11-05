@@ -1,0 +1,32 @@
+@startuml
+
+interface HTTP as http
+
+package ETL {
+[requests]
+[beautiful-soup]
+[pymongo_etl]
+
+[requests] --> [beautiful-soup]
+[beautiful-soup] --> [pymongo_etl]
+}
+
+package BI {
+[pymongo_bi]
+[pandas]
+[seaborn]
+
+[pymongo_bi] --> [pandas]
+[pandas] --> [seaborn]
+}
+
+database "Data Lake" {
+[MongoDB]
+}
+
+[requests] <-up-> http
+[pymongo_etl] --> [MongoDB]
+[pymongo_bi] <-- [MongoDB]
+
+
+@enduml
